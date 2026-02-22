@@ -1,0 +1,566 @@
+/* Keep layout from shifting left/right when vertical scrollbar appears/disappears */
+html{
+  scrollbar-gutter: stable;
+}
+body{
+  overflow-y: scroll;
+}
+
+:root {
+  --tileH: 124px; /* collapsed tile height */
+  --bg: #0f1216;
+  --paper: rgba(255,255,255,0.03);
+  --ink: rgba(255,255,255,0.90);
+  --muted: rgba(255,255,255,0.62);
+
+  --accent: #AA5EB8;      /* primary highlight */
+  --accent2: #502D4C;     /* secondary highlight */
+}
+
+*{ box-sizing: border-box; }
+
+html, body{
+  margin: 0;
+  padding: 0;
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100%;
+  font-family: var(--font-electrolize), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji","Segoe UI Emoji";
+}
+
+/* --- Background pinning fix ---
+   Keep the blueprint SVG fixed and anchored from top-left */
+html, body{
+  background-attachment: fixed;
+  background-position: top left;
+}
+
+.paper{
+  min-height: 100vh;
+  background-image: url("/paper-blueprint.svg");
+  background-repeat: repeat;
+  background-position: top left;
+  background-attachment: fixed;
+}
+
+.wrap{
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 44px 18px 34px;
+}
+
+.hero{ display: grid; gap: 10px; }
+.heroCenter{ justify-items: center; text-align: center; }
+
+.title{
+  margin: 0;
+  font-family: var(--font-keania), ui-sans-serif, system-ui;
+  font-weight: 400;
+  font-size: clamp(42px, 5vw, 64px);
+  letter-spacing: 0.02em;
+  line-height: 1.0;
+  color: rgba(255,255,255,0.94);
+  text-shadow: 0 0 30px rgba(170,94,184,0.18);
+}
+
+.subtitle{
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255,255,255,0.70);
+  letter-spacing: 0.03em;
+}
+
+/* Segmented slider toggle (equal width) */
+.toggleWrap{
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.toggleTrack{
+  position: relative;
+  width: min(520px, 100%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 999px;
+  padding: 4px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, rgba(255,255,255,0.14));
+  background: rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.toggleIndicator{
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: calc(50% - 4px);
+  left: 4px;
+  border-radius: 999px;
+  background:
+    radial-gradient(120% 200% at 30% 30%, color-mix(in srgb, var(--accent) 45%, rgba(255,255,255,0.10)) 0%, rgba(0,0,0,0.0) 55%),
+    color-mix(in srgb, var(--accent) 28%, rgba(255,255,255,0.10));
+  border: 1px solid rgba(170,94,184,0.55);
+  box-shadow:
+    0 10px 22px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(170,94,184,0.22);
+  transition: transform 220ms ease;
+  will-change: transform;
+}
+
+.toggleTrack.isRobotics .toggleIndicator{ transform: translateX(100%); }
+.toggleTrack.isDigital .toggleIndicator{ transform: translateX(0%); }
+
+.toggleOption{
+  position: relative;
+  z-index: 1;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(255,255,255,0.78);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  padding: 10px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 140ms ease, opacity 140ms ease;
+  user-select: none;
+}
+.toggleOption:hover{ color: rgba(255,255,255,0.9); }
+.toggleOption.isActive{ color: rgba(255,255,255,0.95); }
+
+.toggleLabels{ display: grid; place-items: center; }
+.toggleHint{ color: rgba(255,255,255,0.72); font-size: 12px; }
+
+.section{ margin-top: 26px; }
+.sectionHead{ display: grid; gap: 10px; }
+.sectionHeadCenter{ justify-items: center; text-align: center; }
+
+.h2{
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.86);
+}
+.h3{ margin: 0; font-size: 14px; letter-spacing: 0.02em; }
+
+.pMuted{ margin: 0; font-size: 13px; color: rgba(255,255,255,0.62); }
+.pSmall{ margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.72); line-height: 1.35; }
+
+/* Sorting controls */
+.sortBar{
+  margin: 14px auto 0;
+  width: min(820px, 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.sortGroup{ display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sortLabel{ font-size: 12px; color: rgba(255,255,255,0.65); letter-spacing: 0.03em; margin-right: 2px; }
+
+.sortChip{
+  appearance: none;
+  border: 1px solid rgba(170,94,184,0.28);
+  background: rgba(0,0,0,0.18);
+  color: rgba(255,255,255,0.86);
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.sortChip:hover{
+  border-color: rgba(170,94,184,0.55);
+  background: rgba(255,255,255,0.04);
+}
+.sortChip.isActive{
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(170,94,184,0.25);
+  background: color-mix(in srgb, var(--accent) 18%, rgba(0,0,0,0.18));
+}
+
+.sortDirBtn{
+  appearance: none;
+  border: 1px solid rgba(80,45,76,0.65);
+  background: rgba(0,0,0,0.14);
+  color: color-mix(in srgb, var(--accent) 70%, #fff);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.sortDirBtn:hover{
+  border-color: rgba(170,94,184,0.6);
+  background: rgba(255,255,255,0.04);
+  box-shadow: 0 0 0 1px rgba(170,94,184,0.18);
+}
+
+/* ---------------- Grid ---------------- */
+.grid{
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr; /* mobile */
+  --gridGap: 0px;
+  column-gap: var(--gridGap);
+  row-gap: 0px;
+  grid-auto-flow: row dense;
+  width: 100%;
+}
+
+@media (min-width: 760px){
+  .grid{
+    grid-template-columns: 1fr 1fr; /* desktop */
+  }
+}
+/* ---------------- Tiles ---------------- */
+.card{
+  min-height: var(--tileH);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+
+  /* weld borders (default) */
+  margin: -1px 0 0 -1px;
+
+  padding: 10px 10px 8px;
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ✅ Expanded width fix:
+   Remove the welding negative margin so it cannot “stick out” by 1px. */
+.card.isExpanded{
+  margin-left: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Desktop expansion spans full row (exact row width) */
+@media (min-width: 760px){
+  .card.isExpanded{
+    grid-column: 1 / -1;                 /* still pushes the other tile down */
+    min-height: calc(var(--tileH) * 4);
+
+    /* ✅ width of ONE tile (dynamic calc) */
+    width: 100%;
+    max-width: calc((100% - var(--gridGap)) *0.991);
+    justify-self: start;                 /* keep it aligned to its column */
+    transform: translateX(30x);
+  }
+}
+
+/* Mobile keeps natural expansion downward */
+@media (max-width: 759px){
+  .card.isExpanded{ min-height: auto; }
+}
+
+/* Fogged glass tiles */
+.cardFrost{
+  cursor: pointer;
+  overflow: hidden;
+  background: rgba(0,0,0,0.23);
+  border-color: rgba(170,94,184,0.16);
+  backdrop-filter: blur(2px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+/* Keep hover/expanded above neighbors */
+.cardFrost:hover,
+.cardFrost:focus-within,
+.cardFrost.isExpanded{
+  z-index: 10;
+}
+
+/* ✅ Hover outline ALWAYS on top and never clipped:
+   Use inset outline instead of outer box-shadow ring. */
+.cardFrost:hover{
+  border-color: var(--accent);
+  box-shadow:
+    0 18px 46px rgba(0,0,0,0.40),
+    inset 0 0 0 2px rgba(170,94,184,0.92);
+}
+
+/* Fog + tint */
+.cardFrost::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 0px;
+  background:
+    radial-gradient(120% 160% at 20% 10%, rgba(170,94,184,0.18) 0%, rgba(80,45,76,0.06) 40%, rgba(0,0,0,0) 70%),
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Blur fallback inside the card */
+.cardFrost::after{
+  content: "";
+  position: absolute;
+  inset: -24px;
+  background-image: url("/paper-blueprint.svg");
+  background-repeat: repeat;
+  background-size: 720px 720px;
+  background-position: top left;
+  filter: blur(18px);
+  opacity: 0.22;
+  transform: scale(1.08);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cardFrost > *{ position: relative; z-index: 2; }
+
+.cardTop{
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 7px;
+}
+
+.logoWrap{
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.20);
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Icons are grayscale by default */
+.card .logoWrap img{
+  filter: grayscale(100%) contrast(0.95) brightness(0.9);
+  transition: filter 220ms ease;
+}
+
+/* Restore full color when expanded */
+.card.isExpanded .logoWrap img{
+  filter: none;
+}
+
+.cardMeta{ min-width: 0; }
+
+.releaseDate{
+  margin-top: 3px;
+  margin-bottom: 0;
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+/* Expand control (purple +) */
+.expandBtn{
+  margin-left: auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(170,94,184,0.38);
+  background: color-mix(in srgb, var(--accent) 14%, rgba(0,0,0,0.18));
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease, opacity 160ms ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.expandBtn:hover{
+  background: color-mix(in srgb, var(--accent) 20%, rgba(0,0,0,0.18));
+  border-color: rgba(170,94,184,0.55);
+}
+
+.plusIcon{ transition: transform 220ms ease; will-change: transform; }
+.plusIcon.isOpen{ transform: rotate(45deg); }
+
+/* Animated expand panel */
+.expandPanel{
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: max-height 420ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease, transform 260ms ease;
+}
+.expandPanel[data-open="true"]{
+  max-height: 520px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.expandInner{
+  display: grid;
+  gap: 7px;
+  padding-top: 6px;
+}
+
+.thumb{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  border-radius: 0px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.25);
+}
+
+/* TOP-ALIGNED screenshot in expanded tile */
+.thumbImg{
+  object-fit: cover !important;
+  object-position: top !important;
+}
+
+/* Case-study hero images remain centered */
+.shotImg{
+  object-fit: cover;
+  object-position: center;
+}
+
+.cardActions{
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.btn, .btnGhost, .pill, .backLink{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.10);
+  padding: 9px 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.88);
+  background: rgba(0,0,0,0.18);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.btn:hover, .btnGhost:hover, .pill:hover, .backLink:hover{
+  border-color: rgba(170,94,184,0.55);
+  background: rgba(255,255,255,0.04);
+}
+.btn{
+  border-color: rgba(170,94,184,0.42);
+  background: color-mix(in srgb, var(--accent) 12%, rgba(0,0,0,0.18));
+}
+.btn:hover{
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px rgba(170,94,184,0.18);
+}
+.btnGhost{
+  border-color: rgba(80,45,76,0.65);
+  color: rgba(255,255,255,0.84);
+}
+
+/* Desktop expansion sizing for screenshot so it never collapses */
+@media (min-width: 760px){
+  .card.isExpanded .expandInner{
+    display: grid;
+    grid-template-rows: auto auto;
+  }
+  .card.isExpanded .thumb{
+    aspect-ratio: auto;
+    height: clamp(220px, 42vh, 520px);
+    min-height: 220px;
+  }
+}
+
+/* ---------- Reflow animation (desktop) ---------- */
+@media (min-width: 760px){
+  .grid[data-has-expanded="true"][data-animating="true"] .card:not(.isExpanded){
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(1px);
+    pointer-events: none;
+  }
+
+  .grid[data-has-expanded="true"] .card:not(.isExpanded){
+    transition:
+      opacity 220ms ease,
+      transform 260ms ease,
+      filter 220ms ease,
+      border-color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .grid[data-has-expanded="true"][data-animating="false"] .card:not(.isExpanded){
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    transition-delay: 80ms;
+  }
+
+  .card.isExpanded{
+    transition: box-shadow 220ms ease, border-color 220ms ease, transform 320ms cubic-bezier(.2,.9,.2,1);
+    transform: translateZ(0);
+  }
+  .grid[data-has-expanded="true"] .card.isExpanded{
+    transform: scale(1.01);
+  }
+}
+
+.footer{
+  margin-top: 34px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.footerCenter{ text-align: center; }
+
+/* --- Make screenshot link un-blockable --- */
+.thumb,
+.shotFrame{
+  pointer-events: auto;
+  position: relative;
+  z-index: 20;
+}
+
+/* Let the anchor receive the click, not the img */
+.thumbImg,
+.shotImg{
+  pointer-events: none;
+}
+
+/* --- Force expanded tile shift (survives other transform overrides) --- */
+:root{ --expandShiftX: 4px; }
+
+@media (min-width: 760px){
+  .card.isExpanded{
+    transform: translateX(var(--expandShiftX)) translateZ(0) !important;
+  }
+
+  /* if you also scale expanded tiles during animation, preserve the shift */
+  .grid[data-has-expanded="true"] .card.isExpanded{
+    transform: translateX(var(--expandShiftX)) scale(1.01) !important;
+  }
+}
+
+/* Embedded robotics video */
+.videoFrame{
+  aspect-ratio: 16 / 9;
+  background: rgba(0,0,0,0.35);
+}
+
+.videoFrame iframe{
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
