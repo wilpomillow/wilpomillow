@@ -18,7 +18,10 @@ const electrolize = Electrolize({
 
 export const metadata: Metadata = {
   title: "Wilpo Millow",
-  description: "Wilpo Millow — portfolio"
+  description: "Wilpo Millow — portfolio",
+  icons: {
+    icon: "/images/favicon.png"
+  }
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
