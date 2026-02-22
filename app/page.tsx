@@ -137,9 +137,15 @@ export default function HomePage() {
       <main className="paper">
         <div className="wrap">
           <header className="hero heroCenter">
-            <h1 className="title">Wilpo Millow</h1>
-            <p className="subtitle">Digital builds and robotics work — neatly separated.</p>
+            <Image
+                src="/images/wilpomillow_logo.png"
+                alt="Wilpo Millow logo"
+                width={440}
+                height={160}
+                priority
+              />
 
+              <p className="subtitle">WILPO MILLOW</p>
             <div className="toggleWrap" role="tablist" aria-label="Portfolio sets">
               <div className="toggleTrack isDigital">
                 <div className="toggleIndicator" aria-hidden="true" />
@@ -161,9 +167,15 @@ export default function HomePage() {
     <main className="paper">
       <div className="wrap">
         <header className="hero heroCenter">
-          <h1 className="title">Wilpo Millow</h1>
-          <p className="subtitle">Digital builds and robotics work — neatly separated.</p>
+          <Image
+            src="/images/wilpomillow_logo.png"
+            alt="Wilpo Millow logo"
+            width={440}
+            height={160}
+            priority
+          />
 
+          <p className="subtitle">WILPO MILLOW</p>
           <div className="toggleWrap" role="tablist" aria-label="Portfolio sets">
             <div className={`toggleTrack ${active === "digital" ? "isDigital" : "isRobotics"}`}>
               <div className="toggleIndicator" aria-hidden="true" />
